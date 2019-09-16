@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wwh.mapper.ManagerMapper">
+    <!--登录验证-->
+    <select id="ManLogin" resultType="com.wwh.entity.Manager">
+		select * from manager where manid=#{manid} and pwd=#{pwd}
+	</select>
+
+<!--    文件列表-->
+    <select id="fileList" parameterType="java.util.Map" resultType="com.wwh.entity.UpFile">
+        select * from upfile where 1=1
+        <if test="userid != null and userid neq ''">
+            AND userid like concat('%',#{userid},'%')
+        </if>
+        <if test="filetitle != null and filetitle neq ''">
+            AND filetitle like concat('%',#{filetitle},'%')
+        </if>
+        <if test="filetype != null and filetype neq ''">
+            AND filetype =#{filetype}
+        </if>
+        <if test="time1!= null and time1 neq ''">
+            and uptime &gt;=#{time1}
+        </if>
+        <if test="time2!= null and time2 neq ''">
+            and uptime &lt;=#{time2}
+        </if>
+        <![CDATA[
+           LIMIT #{pageno},#{allpage}
+        ]]>
+    </select>
+</mapper>

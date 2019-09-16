@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wwh.mapper.UserMapper">
+<!--	查询所有用户-->
+	<select id="findUserAll" resultType="com.wwh.entity.User">
+		select * from tbluser
+	</select>
+
+<!--	<insert id="addUser" parameterType="com.wwh.entity.User" useGeneratedKeys="true" keyProperty="topid">-->
+
+<!--		insert into tbluser(userid,pwd,username) values (#{userid},#{pwd},#{username})-->
+
+<!--	</insert>-->
+<!--文件上传-->
+	<insert id="file" parameterType="com.wwh.entity.UpFile" useGeneratedKeys="true" keyProperty="topid">
+
+		insert into UpFile(userid,uptime,filetitle,filetype,zhuangtai,intergation,area)
+		values (#{userid},#{uptime},#{filetitle},#{filetype},#{zhuangtai},#{intergation},#{area})
+
+	</insert>
+
+
+<!--登录验证-->
+	<select id="userLogin" resultType="com.wwh.entity.User">
+		select * from tbluser where userid=#{userid} and pwd=#{pwd}
+	</select>
+
+
+<!--	注册验证用户名-->
+	<select id="regTest" resultType="com.wwh.entity.User">
+		select * from tbluser where userid=#{userid}
+	</select>
+
+
+<!--	带条件查找用户列表-->
+	<select id="findUser" parameterType="java.util.Map" resultType="com.wwh.entity.User">
+		select * from tbluser where 1=1
+			<if test="username != null and username neq ''">
+				AND username like concat('%',#{username},'%')
+			</if>
+			<if test="time1!= null and time1 neq ''">
+				and regtime &gt;=#{time1}
+			</if>
+			<if test="time2!= null and time2 neq ''">
+				and regtime &lt;=#{time2}
+			</if>
+		<![CDATA[
+           and del='0' LIMIT #{pageno},#{allpage}
+        ]]>
+	</select>
+
+
+<!--	用户注册-->
+	<insert id="addUser" parameterType="com.wwh.entity.UpFile" useGeneratedKeys="true" keyProperty="topid">
+		insert into UpFile(userid,uptime,filetitle,filetype,zhuangtai,intergation,area)
+		values (#{userid},#{uptime},#{filetitle},#{filetype},#{zhuangtai},#{intergation},#{area})
+	</insert>
+	
+<!--	多表查询,一对一-->
+	<select id="check" parameterType="java.lang.Integer" resultMap="upMap">
+		select u.topid,u.userid,u.uptime,u.filetitle,u.filetype,u.zhuangtai,u.intergation,u.area,z.name from upfile u,zhuangtai z where
+		u.zhuangtai=z.id and u.userid=#{id}
+	</select>
+	<resultMap id="upMap" type="com.wwh.entity.UpFile">
+		<id property="topid" column="topid"/>
+        <result property="userid" column="userid"/>
+        <result property="uptime" column="uptime"/>
+        <result property="filetitle" column="filetitle"/>
+        <result property="filetype" column="filetype"/>
+        <result property="zhuangtai" column="zhuangtai"/>
+        <result property="intergation" column="intergation"/>
+		<result property="area" column="area"/>
+<!--		一对一-->
+<association property="zhuangTai" column="topid" javaType="com.wwh.entity.ZhuangTai">
+	<id property="id" column="id"/>
+	<result property="name" column="name"/>
+</association>
+	</resultMap>
+<!--	多表查询一对多-->
+	<select id="findc" parameterType="java.lang.Integer" resultMap="dMap">
+        select u.userid,u.zhuangtai,z.name from zhuangtai z,upfile u where z.id=u.zhuangtai and u.zhuangtai=#{id}
+	</select>
+    <resultMap id="dMap" type="com.wwh.entity.ZhuangTai">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+<!--        <result property="uptime" column="uptime"/>-->
+<!--        <result property="filetitle" column="filetitle"/>-->
+<!--        <result property="filetype" column="filetype"/>-->
+<!--        <result property="zhuangtai" column="zhuangtai"/>-->
+<!--        <result property="intergation" column="intergation"/>-->
+<!--        <result property="area" column="area"/>-->
+        <collection property="up" column="id" javaType="java.util.List" ofType="com.wwh.entity.UpFile">
+
+        </collection>
+    </resultMap>
+</mapper>
+	

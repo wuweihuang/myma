@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+<!--&lt;!&ndash;    执行人&ndash;&gt;-->
+<!--    <bean id="chenLiNa" class="com.wwh.tools.ChenLiNa"></bean>-->
+<!--&lt;!&ndash;    通知方法&ndash;&gt;-->
+<!--    <bean id="sleepHelper" class="com.wwh.tools.SleepHelper"></bean>-->
+
+
+<!--    &lt;!&ndash;    切点&ndash;&gt;-->
+<!--    &lt;!&ndash; 定义切点  匹配所有的sleep方法&ndash;&gt;-->
+<!--    <bean id="sleepPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut">-->
+<!--        <property name="pattern" value=".*sleep"></property>-->
+<!--    </bean>-->
+
+
+<!--    &lt;!&ndash;    切面&ndash;&gt;-->
+<!--    &lt;!&ndash; 切面  通知+切点结合 &ndash;&gt;-->
+<!--    <bean id="sleepHelperAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">-->
+<!--&lt;!&ndash;        通知&ndash;&gt;-->
+<!--        <property name="advice" ref="sleepHelper"/>-->
+<!--&lt;!&ndash;        切点&ndash;&gt;-->
+<!--        <property name="pointcut" ref="sleepPointcut"/>-->
+<!--    </bean>-->
+
+
+
+<!--    &lt;!&ndash; 定义代理对象 &ndash;&gt;-->
+<!--    &lt;!&ndash;    方法调用的就是这个代理对象，对应的实现类，也可以用接口来接收&ndash;&gt;-->
+<!--    <bean id="linaProxy" class="org.springframework.aop.framework.ProxyFactoryBean">-->
+<!--        <property name="target" ref="chenLiNa"/>-->
+<!--        <property name="interceptorNames" value="sleepHelperAdvisor"/>-->
+<!--    </bean>-->
+<!--    扫描-->
+    <context:component-scan base-package="com.wwh" ></context:component-scan>
+    <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
+</beans>

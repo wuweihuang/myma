@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+<!--	管理员操作-->
+	 <package name="demo" namespace="/demo" extends="struts-default">
+		 <!--	管理员登录-->
+		<action name="login" class="manLoginAction">
+		<result name="success" type="dispatcher">/index.jsp</result>
+		<result name="error" type="redirect">/ManLogin.jsp</result>
+		</action>
+<!--		 删除用户表-->
+		 <action name="del" class="manLoginAction">
+			 <result name="ok" type="chain">
+				 <param name="namespace">/user</param>
+				 <param name="actionName">userlist</param>
+				 <param name="methodName">findUserList</param>
+			 </result>
+		 </action>
+	 </package>
+	<!--	管理员列表-->
+	<package name="man" namespace="/man" extends="struts-default">
+		<interceptors>
+			<interceptor name="first" class="com.wwh.interceptor.FirstInterceptor">
+			</interceptor>
+		</interceptors>
+<!--		一个包里默认调用这个拦截器-->
+		<default-interceptor-ref name="first"></default-interceptor-ref>
+<!--		失败走的全局网页-->
+		<global-results>
+			<result name="error">/ManLogin.jsp</result>
+		</global-results>
+		<action name="list" class="manLoginAction">
+			<result name="success" type="dispatcher">/ManagerList.jsp</result>
+			<result name="error" type="redirect">/ManLogin.jsp</result>
+		</action>
+		<action name="filelist" class="manLoginAction">
+			<result name="success" type="dispatcher">/FileList.jsp</result>
+			<result name="error" type="redirect"></result>
+		</action>
+	</package>
+
+<!--	用户端-->
+	<package name="user" namespace="/user" extends="struts-default,json-default">
+<!--	用户登录-->
+		<action name="login" class="userAction">
+			<result name="success" type="dispatcher">/FileUp.jsp</result>
+			<result name="error" type="redirect">/UserLogin.jsp</result>
+		</action>
+<!--	用户列表-->
+		<action name="userlist" class="userAction">
+			<result name="success" type="dispatcher">/UserList.jsp</result>
+			<result name="error" type="redirect">/ManLogin.jsp</result>
+		</action>
+<!--	验证账户是否可用-->
+		<action name="regid" class="userAction">
+			<result name="rejson" type="json">
+<!--	root为固定写法，把action存的map传到前端-->
+				<param name="root">regmap</param>
+			</result>
+		</action>
+<!--	用户注册-->
+		<action name="reg" class="upLoadAction">
+			<result name="ok" type="redirect">/UserLogin.jsp</result>
+<!--			头像上传-->
+			<interceptor-ref name="defaultStack">
+				<param name="fileUpload.maximumSize">10240000</param>
+				<param name="fileUpload.allowedTypes">text/plain,application/vnd.ms-powerpoint</param>
+				<param name="fileUpload.allowedWedExtensions">.txt,.ppt</param>
+			</interceptor-ref>
+		</action>
+		<action name="uploads" class="upload" >
+			<result name="success">/FileUp.jsp</result>
+			<interceptor-ref name="fileUpload">
+				<param name="maximumSize">10240000</param>
+				<param name="allowedTypes">text/plain,application/vnd.ms-powerpoint</param>
+				<param name="allowedExtensions">.txt,.ppt</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+
+	</package>
+</struts>
